@@ -18,3 +18,6 @@ The most benefit using Azure Cosmos DB is that all data can be accessed its own 
 Following figure shows how it looks like on web browser.
 ![alt text][image2]
 
+##For more detailed explanation more than implementation part, I attached write-up part as well.
+
+
