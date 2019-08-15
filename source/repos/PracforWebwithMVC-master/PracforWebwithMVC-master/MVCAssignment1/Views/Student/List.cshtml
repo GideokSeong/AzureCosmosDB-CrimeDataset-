@@ -1,0 +1,94 @@
+﻿@model IEnumerable<MVCAssignment1.Models.Student>
+@{
+	ViewData["Title"] = "List";
+}
+
+<h1>List</h1>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+
+@using (Html.BeginForm("OnPostSort", "Student")) {
+	<p>
+		Find by name: @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+		<input type="submit" value="Search" />
+		<a asp-action="List">Back to full List</a>
+	</p>
+}
+
+<table class="table">
+
+	<thead>
+		<tr>
+			<th>
+				@Html.CheckBox("check_all", false)
+				@Html.ActionLink("Last Name", "OnPostSort", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.FirstMidName)
+			</th>
+			<th>
+				@Html.ActionLink("Enrollment Date", "OnPostSort", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in Model) {
+			<tr>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.ID">
+						<input type="checkbox" class="selectBox" />
+						@Html.DisplayFor(modelItem => item.LastName)
+					</a>
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.FirstMidName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.EnrollmentDate)
+				</td>
+				<td>
+					<a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	debugger;
+	$(document).ready(function () {
+
+		$("#check_all").on("click", function () {
+
+			if ($(".selectBox").prop("checked")) {
+				$(".selectBox").prop("checked", false);
+			} else {
+				$(".selectBox").prop("checked", true);
+			}
+		});
+
+		$("#deleteBtn").click(function () {
+			var SelectItems = [];
+			$.each($("input[class='selectBox']:checked"), function () {
+				SelectItems.push($(this).val());
+			})
+			//debugger;
+			$.ajax({
+				url: './Index',
+				type: 'Post',
+				data: { SelectItems: SelectItems },
+				traditional: true,
+				// contentType: 'application/json; charset=utf-8',
+				dataType: 'Json',
+				success: function () { document.location.reload() }
+			})
+		})
+
+	});
+</script>
